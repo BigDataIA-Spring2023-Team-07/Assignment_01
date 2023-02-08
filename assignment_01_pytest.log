@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.6, pytest-7.2.1, pluggy-1.0.0 -- /home/dhanush/venvs/bigdata_env/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/dhanush/Big_data/Assignment_01
+plugins: anyio-3.6.2
+collecting ... collected 1 item
+
+test.py::test_link_nexrad_streamlit PASSED                               [100%]
+
+============================== 1 passed in 0.50s ===============================
