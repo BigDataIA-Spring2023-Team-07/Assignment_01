@@ -73,7 +73,7 @@ st.title("Generate Link Nexrad")
 # User selects the year
 yearSelected = st.selectbox(
     'Select the year',
-    ('2022', '2023'), key = 'year')
+    ('2022', '2023'), key = 'year1')
 
 insertData_to_db()
 data = retrieveData_from_db(yearSelected)

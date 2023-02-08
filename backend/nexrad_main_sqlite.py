@@ -59,7 +59,7 @@ def insert_data(year):
         for val in range(len(df)):
             cursor.execute("Insert into nexrad_2022 values (?,?,?,?)", (str(df.iloc[val]['Year']),str(df.iloc[val]['Month']), str(df.iloc[val]['Day']), df.iloc[val]['Station']))
 
-        with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_2022.json') as user_file:
+        with open('data/nexrad_data_2022.json') as user_file:
             file_contents = user_file.read()
         data = json.loads(file_contents)
 
@@ -72,7 +72,7 @@ def insert_data(year):
         for val in range(len(df)):
             cursor.execute("Insert into nexrad_2023 values (?,?,?,?)", (str(df.iloc[val]['Year']),str(df.iloc[val]['Month']), str(df.iloc[val]['Day']), df.iloc[val]['Station']))
 
-        with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_2023.json') as user_file:
+        with open('data/nexrad_data_2023.json') as user_file:
             file_contents = user_file.read()
         data = json.loads(file_contents)
 
