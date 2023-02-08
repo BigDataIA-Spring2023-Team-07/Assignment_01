@@ -3,8 +3,9 @@ platform linux -- Python 3.10.6, pytest-7.2.1, pluggy-1.0.0 -- /home/dhanush/ven
 cachedir: .pytest_cache
 rootdir: /home/dhanush/Big_data/Assignment_01
 plugins: anyio-3.6.2
-collecting ... collected 1 item
+collecting ... collected 2 items
 
-test.py::test_link_nexrad_streamlit PASSED                               [100%]
+test.py::test_link_nexrad_streamlit PASSED                               [ 50%]
+test.py::test_goes18_link_generation PASSED                              [100%]
 
-============================== 1 passed in 0.50s ===============================
+============================== 2 passed in 0.50s ===============================

@@ -1,8 +1,11 @@
 import streamlit as st
 import json
 from backend import nexrad_main, nexrad_main_sqlite
+from pages import Nexrad
 import os
 import sqlite3
+import warnings
+warnings.filterwarnings("ignore")
 
 # st.title("Nexrad Locations")
 # plt = nexrad_main.plotNextRad("/home/dhanush/Big_data/Assignment_01/data/Nexrad.csv")
@@ -68,7 +71,7 @@ def retrieveData_from_db(yearSelected):
     return data
 
 
-
+Nexrad.generateData()
 
 st.title("Generate Link Nexrad")
 
@@ -76,7 +79,7 @@ st.title("Generate Link Nexrad")
 # User selects the year
 yearSelected = st.selectbox(
     'Select the year',
-    ('2022', '2023'))
+    ('2022', '2023'), key = 'year')
 
 insertData_to_db()
 data = retrieveData_from_db(yearSelected)
@@ -85,25 +88,25 @@ data = retrieveData_from_db(yearSelected)
 # User selects the month
 monthSelected = st.selectbox(
     'Select the month',
-    tuple(data.keys()))
+    tuple(data.keys()), key = 'month')
 
 # User selects the day
 daySelected = st.selectbox(
     'Select the day',
-    tuple(data[monthSelected].keys()))
+    tuple(data[monthSelected].keys()), key = 'day')
 
 
 # User selects the station
 stationSelected = st.selectbox(
     'Select the station',
-    tuple(data[monthSelected][daySelected]))
+    tuple(data[monthSelected][daySelected]), key = 'station')
 
 
 # User selects the file
 file_tup = nexrad_main.listFiles(yearSelected, monthSelected, daySelected, stationSelected)
 fileSelected = st.selectbox(
         'Select the file',
-        file_tup)
+        file_tup, key = 'file')
 
 
 if st.button("Submit"):
