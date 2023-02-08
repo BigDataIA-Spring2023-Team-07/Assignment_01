@@ -2,6 +2,7 @@ import streamlit as st
 import json
 from backend import nexrad_main, nexrad_main_sqlite
 import os
+import sqlite3
 
 # st.title("Nexrad Locations")
 # plt = nexrad_main.plotNextRad("/home/dhanush/Big_data/Assignment_01/data/Nexrad.csv")
@@ -11,26 +12,65 @@ import os
 base_path = os.environ.get('base_path')
 data_path = os.environ.get('data_path')
 data_path = os.path.join(base_path, data_path)
+data_files = os.listdir(data_path)
 
-st.title("Generate Link Nexrad")
-
-
-# Grabs the Json if its not available
-nexrad_main.grabData()
-
-# Creates csv file based on the Json
+database_file_name = os.path.join(data_path,'assignment_01.db')
+database_file_path = os.path.join(data_path,database_file_name)
 
 data_files = os.listdir(data_path)
-if 'nexrad_data_2022.csv' not in data_files:
-    nexrad_main.generateCsv('2022')
 
-if 'nexrad_data_2023.csv' not in data_files:
-    nexrad_main.generateCsv('2023')
 
-# Inserts the contents from csv file to db
-year = ['2022','2023']
-for y in year:
-    nexrad_main_sqlite.insert_data(y)
+def generateData():
+
+    # Grabs the Json if its not available
+    nexrad_main.grabData()
+
+
+    # Creates csv file based on the Json file
+    if 'nexrad_data_2022.csv' not in data_files:
+        nexrad_main.generateCsv('2022')
+
+    if 'nexrad_data_2023.csv' not in data_files:
+        nexrad_main.generateCsv('2023')
+
+def insertData_to_db():
+
+    # Inserts the contents from csv file to db
+    year = ['2022','2023']
+    for y in year:
+        nexrad_main_sqlite.insert_data(y)
+
+
+def retrieveData_from_db(yearSelected):
+
+    # Retrieves the contents from db
+
+    if yearSelected == '2022':
+
+        connection = sqlite3.connect(database_file_path)
+        cursor = connection.cursor()
+        cursor.execute("Select * from nexrad_2022_json")
+
+        rows = cursor.fetchall()
+        data = json.loads(rows[0][0])
+        connection.close()
+
+    if yearSelected == '2023':
+
+        connection = sqlite3.connect(database_file_path)
+        cursor = connection.cursor()
+        cursor.execute("Select * from nexrad_2023_json")
+
+        rows = cursor.fetchall()
+        data = json.loads(rows[0][0])
+        connection.close()
+
+    return data
+
+
+
+
+st.title("Generate Link Nexrad")
 
 
 # User selects the year
@@ -38,18 +78,8 @@ yearSelected = st.selectbox(
     'Select the year',
     ('2022', '2023'))
 
-if yearSelected == '2022':
-    with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_2022.json') as user_file:
-        file_contents = user_file.read()
-    data = json.loads(file_contents)
-
-if yearSelected == '2023':
-    with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_2023.json') as user_file:
-        file_contents = user_file.read()
-    data = json.loads(file_contents)
-
-
-
+insertData_to_db()
+data = retrieveData_from_db(yearSelected)
 
 
 # User selects the month

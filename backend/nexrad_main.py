@@ -94,7 +94,7 @@ def grabData():
 
     # Call grab data function to create Json for year 2022 and 2023
 
-    year = ['2023', '2022']
+    year = ['2022', '2023']
 
     for y in year:
 
@@ -258,4 +258,3 @@ def plotNextRad(file_name):
 
     return fig
 
-grabData()
