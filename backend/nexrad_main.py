@@ -7,11 +7,22 @@ from dotenv import load_dotenv
 import json
 import random, string
 import logging
+import sqlite3
 
 logging.basicConfig(filename = 'assignment_01.log',level=logging.INFO, force= True, format='%(asctime)s:%(levelname)s:%(message)s')
 
 
+
+
 load_dotenv()
+
+base_path = os.environ.get('base_path')
+data_path = os.environ.get('data_path')
+data_path = os.path.join(base_path, data_path)
+
+
+database_file_name = os.path.join(data_path,'assignment_01.db')
+ddl_file_name = os.path.join(data_path,'assignment_01.sql')
 
 
 def createConnection():
@@ -46,10 +57,19 @@ def createJson(year):
     s3 = createConnection()
 
     bucket = 'noaa-nexrad-level2'
-    result = s3.list_objects(Bucket=bucket, Prefix= year + "/" , Delimiter='/')
-    
-    for o in result.get('CommonPrefixes'):
-        generatedJson[o.get('Prefix').split('/')[1]] = {}
+    paginator = s3.get_paginator('list_objects')
+    config = {"PageSize":100}
+    operation_parameters = {'Bucket': bucket,
+                        'Prefix': year + "/",
+                        'Delimiter':'/',
+                        'PaginationConfig': config}
+                        
+
+    result = paginator.paginate(**operation_parameters)
+
+    for page in result:
+        for o in page.get('CommonPrefixes'):
+            generatedJson[o.get('Prefix').split('/')[1]] = {}
     
     for m in list(generatedJson.keys()):
         result = s3.list_objects(Bucket=bucket, Prefix= year + "/" + m + '/' , Delimiter='/')
@@ -72,14 +92,19 @@ def grabData():
 
     """Grabs the data from the S3 bucket and creates a json file for each year"""
 
+    # Call grab data function to create Json for year 2022 and 2023
+
     year = ['2023', '2022']
 
     for y in year:
-        with open('nexrad_data_'+str(y)+'.json', 'w') as outfile:
-            json.dump(createJson(y), outfile)
-            logging.info("Json file created for the year " + str(y))
 
-  
+        data_files = os.listdir(data_path)
+        if 'nexrad_data_'+str(y)+'.json' not in data_files:
+            with open(os.path.join(data_path, 'nexrad_data_'+str(y)+'.json'), 'w') as outfile:
+                json.dump(createJson(y), outfile)
+                logging.info("Json file created for the year " + str(y))
+
+    
 
 
 def listFiles(year, month, day, station):
@@ -183,7 +208,34 @@ def generateLink(year, month, day, station, file):
     url = "https://noaa-nexrad-level2.s3.amazonaws.com/" + year + "/" + month + "/" + day + "/" + station + "/" + file
 
     logging.info("link generated for the User bucket")
+    logging.info(url)
     return url
+
+
+def generateCsv(year):
+
+
+    month_lst = []
+    day_lst = []
+    station_lst = []
+
+
+    with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_' + year + '.json') as user_file:
+        file_contents = user_file.read()
+    data = json.loads(file_contents)
+
+
+    for month in data:
+        for day in data[month]:
+            month_lst.append(month)
+            day_lst.append(day)
+            station_lst.append(data[month][day])
+
+    df = pd.DataFrame({'Year': year, 'Month': month_lst, 'Day': day_lst, 'Station': station_lst})
+    df.to_csv(os.path.join(data_path, 'nexrad_data_' + year + '.csv'), index=False)
+
+
+
     
 
 
@@ -206,6 +258,4 @@ def plotNextRad(file_name):
 
     return fig
 
-
-
-
+grabData()
