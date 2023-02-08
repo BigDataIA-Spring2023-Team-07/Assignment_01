@@ -1,3 +1,7 @@
+.env
+Assignment_01/.env
+Assignment_01/assignment_01.log
+assignment_01.log
 backend/aws/venv_aws
 
 backend/.env
