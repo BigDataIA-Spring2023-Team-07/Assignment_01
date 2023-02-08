@@ -12,14 +12,13 @@ from pathlib import Path
 
 load_dotenv()
 
-base_path = os.environ.get('base_path')
-data_path = os.environ.get('data_path')
-data_path = os.path.join(base_path, data_path)
+data_path = 'data/'
 
-data_files = os.listdir(data_path)
+database_file_name = 'assignment_01.db'
+database_path = os.path.join('data/', database_file_name)
 
-database_file_name = os.path.join(data_path,'assignment_01.db')
-database_file_path = os.path.join(data_path,database_file_name)
+data_files = os.listdir('data/')
+
 
 
 
@@ -30,7 +29,7 @@ if 'assignment_01.db' not in data_files:
 
 def create_db(year):
 
-    connection = sqlite3.connect(database_file_path)
+    connection = sqlite3.connect(database_path)
     cursor = connection.cursor()
     if year == '2022':
         cursor.execute("Drop table if exists nexrad_2022")
@@ -53,7 +52,7 @@ def insert_data(year):
     
     df = pd.read_csv(os.path.join(data_path,'nexrad_data_' + year + '.csv'))
     create_db(year)
-    connection = sqlite3.connect(database_file_path)
+    connection = sqlite3.connect(database_path)
     cursor = connection.cursor()
 
     connection.commit()

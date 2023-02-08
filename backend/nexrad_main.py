@@ -10,17 +10,11 @@ import sqlite3
 logging.basicConfig(filename = 'assignment_01.log',level=logging.INFO, force= True, format='%(asctime)s:%(levelname)s:%(message)s')
 
 
-
-
 load_dotenv()
 
-base_path = os.environ.get('base_path')
-data_path = os.environ.get('data_path')
-data_path = os.path.join(base_path, data_path)
 
-
-database_file_name = os.path.join(data_path,'assignment_01.db')
-ddl_file_name = os.path.join(data_path,'assignment_01.sql')
+database_file_name = 'assignment_01.db'
+data_path = os.path.join('data/', database_file_name)
 
 
 def createConnection():
@@ -34,8 +28,8 @@ def createConnection():
 
     s3client = boto3.client('s3',
     region_name= "us-east-1",
-    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'))
+    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY1'),
+    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY1'))
 
     logging.info("Connection to S3 bucket created")
 
@@ -96,14 +90,13 @@ def grabData():
 
     for y in year:
 
-        data_files = os.listdir(data_path)
+        data_files = os.listdir('data/')
         if 'nexrad_data_'+str(y)+'.json' not in data_files:
-            with open(os.path.join(data_path, 'nexrad_data_'+str(y)+'.json'), 'w') as outfile:
+            with open(os.path.join('data/', 'nexrad_data_'+str(y)+'.json'), 'w') as outfile:
                 json.dump(createJson(y), outfile)
                 logging.info("Json file created for the year " + str(y))
 
     
-
 
 def listFiles(year, month, day, station):
 
@@ -218,7 +211,7 @@ def generateCsv(year):
     station_lst = []
 
 
-    with open('/home/dhanush/Big_data/Assignment_01/data/nexrad_data_' + year + '.json') as user_file:
+    with open('data/nexrad_data_' + year + '.json') as user_file:
         file_contents = user_file.read()
     data = json.loads(file_contents)
 
@@ -237,22 +230,22 @@ def generateCsv(year):
     
 
 
-def plotNextRad(file_name):
+# def plotNextRad(file_name):
 
-    """
-    This function plots the NEXRAD locations on a map based on the csv file
-    Args:
-        file_name (str): The name of the csv file
-    Returns:
-        fig (plotly.graph_objects.Figure): The plotly figure object
-    """
+#     """
+#     This function plots the NEXRAD locations on a map based on the csv file
+#     Args:
+#         file_name (str): The name of the csv file
+#     Returns:
+#         fig (plotly.graph_objects.Figure): The plotly figure object
+#     """
 
-    df = pd.read_csv(file_name)
-    df["Lon"] = -1 * df["Lon"]
+#     df = pd.read_csv(file_name)
+#     df["Lon"] = -1 * df["Lon"]
 
-    # Plot the NEXRAD locations on a map
-    fig = px.scatter_geo(df,lat='Lat',lon='Lon')
-    fig.update_layout(title = 'Nexrad Locations', title_x=0.5)
+#     # Plot the NEXRAD locations on a map
+#     fig = px.scatter_geo(df,lat='Lat',lon='Lon')
+#     fig.update_layout(title = 'Nexrad Locations', title_x=0.5)
 
-    return fig
+#     return fig
 

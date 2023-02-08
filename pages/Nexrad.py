@@ -7,20 +7,14 @@ import sqlite3
 import warnings
 warnings.filterwarnings("ignore")
 
-# st.title("Nexrad Locations")
-# plt = nexrad_main.plotNextRad("/home/dhanush/Big_data/Assignment_01/data/Nexrad.csv")
-# st.plotly_chart(plt)
 
+data_path = 'data/'
 
-base_path = os.environ.get('base_path')
-data_path = os.environ.get('data_path')
-data_path = os.path.join(base_path, data_path)
-data_files = os.listdir(data_path)
+database_file_name = 'assignment_01.db'
+database_path = os.path.join('data/', database_file_name)
 
-database_file_name = os.path.join(data_path,'assignment_01.db')
-database_file_path = os.path.join(data_path,database_file_name)
+data_files = os.listdir('data/')
 
-data_files = os.listdir(data_path)
 
 
 def generateData():
@@ -50,7 +44,7 @@ def retrieveData_from_db(yearSelected):
 
     if yearSelected == '2022':
 
-        connection = sqlite3.connect(database_file_path)
+        connection = sqlite3.connect(database_path)
         cursor = connection.cursor()
         cursor.execute("Select * from nexrad_2022_json")
 
@@ -60,7 +54,7 @@ def retrieveData_from_db(yearSelected):
 
     if yearSelected == '2023':
 
-        connection = sqlite3.connect(database_file_path)
+        connection = sqlite3.connect(database_path)
         cursor = connection.cursor()
         cursor.execute("Select * from nexrad_2023_json")
 
