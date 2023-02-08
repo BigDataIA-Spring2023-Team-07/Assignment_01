@@ -1,3 +1,11 @@
 backend/aws/venv_aws
 
-backend/aws/.env
+backend/.env
+
+pages/venv_streamlit
+
+backend/venv_goes18
+
+venv_assignment1
+backend/test.py
+assignment_01.log
