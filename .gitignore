@@ -2,3 +2,14 @@
 Assignment_01/.env
 Assignment_01/assignment_01.log
 assignment_01.log
+backend/aws/venv_aws
+
+backend/.env
+
+pages/venv_streamlit
+
+backend/venv_goes18
+
+venv_assignment1
+backend/test.py
+assignment_01.log
