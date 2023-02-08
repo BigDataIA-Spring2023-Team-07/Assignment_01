@@ -8,7 +8,7 @@ from backend import main_goes18
 st.title('Generate GOES18 image URL')
 
 station_box = st.selectbox(
-    'Stataion:',
+    'Station:',
     main_goes18.grab_station())
 
 year_box = st.selectbox(

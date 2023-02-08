@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import sqlite3
 from pathlib import Path
 
+logging.basicConfig(filename = 'assignment_01.log',level=logging.INFO, force= True, format='%(asctime)s:%(levelname)s:%(message)s')
+
 load_dotenv()
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
