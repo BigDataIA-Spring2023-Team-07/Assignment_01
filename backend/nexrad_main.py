@@ -149,8 +149,8 @@ def uploadFiletoS3(key, source_bucket, target_bucket):
     """
     
     s3 = boto3.resource('s3',
-         aws_access_key_id= os.environ.get('AWS_ACCESS_KEY'),
-         aws_secret_access_key= os.environ.get('AWS_SECRET_KEY')
+         aws_access_key_id= os.environ.get('AWS_ACCESS_KEY1'),
+         aws_secret_access_key= os.environ.get('AWS_SECRET_KEY1')
     )
     copy_source = {
         'Bucket': source_bucket,
