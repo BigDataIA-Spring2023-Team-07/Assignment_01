@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 import os
 import boto3
@@ -17,9 +18,17 @@ database_file_name = 'assignment_01.db'
 data_path = os.path.join('data/', database_file_name)
 
 
+
+clientlogs = boto3.client('logs',
+region_name= "us-east-1",
+aws_access_key_id=os.environ.get('AWS_LOG_ACCESS_KEY'),
+aws_secret_access_key=os.environ.get('AWS_LOG_SECRET_KEY'))
+
+
+
 def createConnection():
     
-    """ This function creates a connection to the AWS S3 bucket
+    """ This function creates a connection to the AWS S3 bucket for fetching data
     Args:
         None
     Returns:
@@ -31,9 +40,15 @@ def createConnection():
     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY1'),
     aws_secret_access_key=os.environ.get('AWS_SECRET_KEY1'))
 
-    logging.info("Connection to S3 bucket created")
+    write_logs("Connection to S3 bucket created")
 
     return s3client
+
+
+
+
+
+    
 
 def createJson(year):
     """Creates a json file with the nexrad data
@@ -119,7 +134,7 @@ def listFiles(year, month, day, station):
     for o in result.get('Contents'):
         lst.append(o.get('Key').split('/')[4])
 
-    logging.info("files retrieved for the given year, month, day and station from the S3 bucket")
+    write_logs("files retrieved for the given year, month, day and station from the S3 bucket")
     return tuple(lst) 
 
 def getKey(year, month, day, station, file):
@@ -159,7 +174,7 @@ def uploadFiletoS3(key, source_bucket, target_bucket):
     uploaded_key = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
     s3.meta.client.copy(copy_source, target_bucket , uploaded_key)
 
-    logging.info("File uploaded to the S3 bucket from source destination to target destination")
+    write_logs("File uploaded to the S3 bucket from source destination to target destination")
     return uploaded_key
 
 
@@ -175,7 +190,7 @@ def generateUserLink(bucket_name, key):
     """
 
     url = "https://" + bucket_name + ".s3.amazonaws.com" + "/" + key
-    logging.info("link generated for the Nexxrad bucket")
+    write_logs("link generated for the Nexxrad bucket")
     return url
 
 
@@ -198,8 +213,8 @@ def generateLink(year, month, day, station, file):
 
     url = "https://noaa-nexrad-level2.s3.amazonaws.com/" + year + "/" + month + "/" + day + "/" + station + "/" + file
 
-    logging.info("link generated for the User bucket")
-    logging.info(url)
+    write_logs("link generated for the User bucket")
+    write_logs(url)
     return url
 
 
@@ -229,6 +244,26 @@ def generateCsv(year):
 
     df = pd.DataFrame({'Year': year, 'Month': month_lst, 'Day': day_lst, 'Station': station_lst})
     df.to_csv(os.path.join(data_path, 'nexrad_data_' + year + '.csv'), index=False)
+
+
+def write_logs(message):
+    """Writes the logs to the cloudwatch logs
+
+    Args:
+        message (str): The message to be written to the logs
+    """
+    
+    clientlogs.put_log_events (
+    logGroupName="assignment_01",
+    logStreamName="app_logs",
+    logEvents=[
+        {
+    'timestamp' : int(time.time()* 1e3),
+    'message': message,
+    }
+    ]
+    )
+
 
 
 
