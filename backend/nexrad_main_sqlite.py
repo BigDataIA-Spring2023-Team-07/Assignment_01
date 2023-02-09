@@ -8,13 +8,12 @@ import logging
 import sqlite3
 from pathlib import Path
 
+
+
 load_dotenv()
-
 data_path = 'data/'
-
 database_file_name = 'assignment_01.db'
 database_path = os.path.join('data/', database_file_name)
-
 data_files = os.listdir('data/')
 
 
@@ -26,6 +25,13 @@ if 'assignment_01.db' not in data_files:
 
 
 def create_db(year):
+
+    """Creates table for nexrad 2022 and nexrad 2023 data
+
+    Args:
+        year (str): year for which the table is to be created
+    
+    """
 
     connection = sqlite3.connect(database_path)
     cursor = connection.cursor()
@@ -47,6 +53,14 @@ def create_db(year):
 
 
 def insert_data(year):
+
+    """Inserts data into the table created for nexrad 2022 and nexrad 2023 data
+    
+    Args:
+        year (str): year for which the data is to be inserted
+    
+    """
+
     
     df = pd.read_csv(os.path.join(data_path,'nexrad_data_' + year + '.csv'))
     create_db(year)

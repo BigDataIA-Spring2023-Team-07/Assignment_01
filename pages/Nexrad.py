@@ -9,15 +9,17 @@ warnings.filterwarnings("ignore")
 
 
 data_path = 'data/'
-
 database_file_name = 'assignment_01.db'
 database_path = os.path.join('data/', database_file_name)
-
 data_files = os.listdir('data/')
 
 
 
 def generateData():
+
+    """Generates csv file for nexrad 2022 and nexrad 2023 data
+
+    """
 
     # Grabs the Json if its not available
     nexrad_main.grabData()
@@ -31,6 +33,9 @@ def generateData():
         nexrad_main.generateCsv('2023')
 
 def insertData_to_db():
+    """
+    Inserts the contents from csv file to db
+    """
 
     # Inserts the contents from csv file to db
     year = ['2022','2023']
@@ -39,6 +44,14 @@ def insertData_to_db():
 
 
 def retrieveData_from_db(yearSelected):
+    """Retrieves the contents from db
+
+    Args:
+        yearSelected (str): the year for which the data is to be retrieved
+
+    Returns:
+        Json: returns the retrived data in Json format
+    """
 
     # Retrieves the contents from db
 

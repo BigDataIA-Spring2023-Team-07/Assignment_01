@@ -17,7 +17,7 @@ def test_link_nexrad_streamlit():
     assert "https://noaa-nexrad-level2.s3.amazonaws.com/2014/09/07/KAPX/KAPX20140907_010223_V06.gz" == nexrad_main.generateLink("2014", "09", "07", "KAPX", "KAPX20140907_010223_V06.gz")
     assert "https://noaa-nexrad-level2.s3.amazonaws.com/2008/08/19/KCBW/KCBW20080819_012424_V03.gz" == nexrad_main.generateLink("2008", "08", "19", "KCBW", "KCBW20080819_012424_V03.gz")
     assert "https://noaa-nexrad-level2.s3.amazonaws.com/1993/11/12/KLWX/KLWX19931112_005128.gz"     == nexrad_main.generateLink("1993", "11", "12", "KLWX", "KLWX19931112_005128.gz")
-
+    assert "https://noaa-nexrad-level2.s3.amazonaws.com/2003/07/17/KBOX/KBOX20030717_014732.gz"    == nexrad_main.generateLink("2003", "07", "17", "KBOX", "KBOX20030717_014732.gz")
 
 
 

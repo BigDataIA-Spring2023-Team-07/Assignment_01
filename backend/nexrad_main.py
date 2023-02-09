@@ -205,6 +205,11 @@ def generateLink(year, month, day, station, file):
 
 def generateCsv(year):
 
+    """Generates the csv file for the given year
+    
+    Args:
+        year (str): year for which the CSV file is to be generated
+    """
 
     month_lst = []
     day_lst = []
@@ -226,8 +231,6 @@ def generateCsv(year):
     df.to_csv(os.path.join(data_path, 'nexrad_data_' + year + '.csv'), index=False)
 
 
-
-    
 
 
 # def plotNextRad(file_name):
