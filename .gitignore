@@ -13,3 +13,5 @@ venv_assignment1
 backend/test.py
 __pycache__
 backend/__pycache__
+backend/__pycache__/nexrad_main.cpython-310.pyc
+pages/__pycache__/Nexrad.cpython-310.pyc

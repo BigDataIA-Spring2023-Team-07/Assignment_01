@@ -246,7 +246,17 @@ def generateCsv(year):
     df.to_csv(os.path.join(data_path, 'nexrad_data_' + year + '.csv'), index=False)
 
 
+def appendCsv():
+
+    if 'Nexrad_data.csv' not in os.listdir('data/'):
+        df_2022 = pd.read_csv('data/nexrad_data_2022.csv')
+        df_2023 = pd.read_csv('data/nexrad_data_2023.csv')
+        df = pd.concat([df_2022, df_2023])
+        df.to_csv(os.path.join('data/', 'Nexrad_data.csv'), index=False)
+
+
 def write_logs(message):
+    
     """Writes the logs to the cloudwatch logs
 
     Args:
