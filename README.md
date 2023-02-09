@@ -1,8 +1,8 @@
 # Assignment_01
 
-**Codelab Link:**
+**Codelab Link:**  https://codelabs-preview.appspot.com/?file_id=1FLwByNAXskvm0ek15IzxWrLuufmhpA1LlNayCioD8FU#0
 
-**Streamlit link:**
+**Streamlit link:** https://sevirdataretrieve.streamlit.app/
 
 
 
