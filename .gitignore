@@ -13,3 +13,10 @@ venv_assignment1
 backend/test.py
 __pycache__
 backend/__pycache__
+
+
+data/great_expectations/checkpoints
+data/great_expectations/plugins
+data/great_expectations/expectations/.ge_store_backend_id
+data/great_expectations/uncommitted/config_variables.yml
+data/great_expectations/uncommitted/validations
