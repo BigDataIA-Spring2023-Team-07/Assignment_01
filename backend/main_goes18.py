@@ -5,19 +5,26 @@ import pandas as pd
 from dotenv import load_dotenv
 import sqlite3
 from pathlib import Path
+import time
 
-logging.basicConfig(filename = 'assignment_01.log',level=logging.INFO, force= True, format='%(asctime)s:%(levelname)s:%(message)s')
+# logging.basicConfig(filename = 'assignment_01.log',level=logging.INFO, force= True, format='%(asctime)s:%(levelname)s:%(message)s')
 
 load_dotenv()
 
-LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s %(message)s',
-    level=LOGLEVEL,
-    datefmt='%Y-%m-%d %H:%M:%S')
+# LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+# logging.basicConfig(
+#     format='%(asctime)s %(levelname)-8s %(message)s',
+#     level=LOGLEVEL,
+#     datefmt='%Y-%m-%d %H:%M:%S')
 
 database_file_name = 'goes18.db'
 database_file_path = os.path.join('data/',database_file_name)
+
+clientlogs = boto3.client('logs',
+region_name= "us-east-1",
+aws_access_key_id=os.environ.get('AWS_LOG_ACCESS_KEY'),
+aws_secret_access_key=os.environ.get('AWS_LOG_SECRET_KEY'))
+
 
 def create_connection():
     
@@ -27,13 +34,13 @@ def create_connection():
         s3client: aws client id
     """
     
-    logging.info("starting connection to s3")
+    write_logs("starting connection to s3")
     s3client = boto3.client('s3',
                         region_name='us-east-1',
                         aws_access_key_id = os.environ.get('AWS_ACCESS_KEY'),
                         aws_secret_access_key = os.environ.get('AWS_SECRET_KEY')
                         )
-    logging.info("connected to s3")
+    write_logs("connected to s3")
 
     return s3client
 
@@ -44,10 +51,10 @@ def create_df(client_id):
     Args:
         client_id (boto3.client): aws client id
     """
-    logging.debug("fetching objects in NOAA s3 bucket")
+    write_logs("fetching objects in NOAA s3 bucket")
     paginator = client_id.get_paginator('list_objects_v2')
     noaa_bucket = paginator.paginate(Bucket='noaa-goes18', PaginationConfig={"PageSize": 50})
-    logging.info("Writing Files in list from NOAA bucket")
+    write_logs("Writing Files in list from NOAA bucket")
     station=[]
     year=[]
     day=[]
@@ -77,7 +84,7 @@ def create_df(client_id):
     })
     df_goes18.drop_duplicates(inplace=True)
     df_goes18.to_csv('data/df_goes18.csv',index=False)
-    logging.info("File created in data folder")
+    write_logs("File created in data folder")
     
     
 
@@ -101,18 +108,18 @@ def query_into_dataframe():
     """
     db = sqlite3.connect(database_file_path)
     df = pd.read_sql_query("SELECT * FROM goes18_metadata", db)
-    logging.info(df) 
+    write_logs(df) 
     
 def check_database_initilization():
     """initializing database if not present and adding file into it
     """
     print(os.path.dirname(__file__))
     if not Path(database_file_path).is_file():
-        logging.info(f"Database file not found, initilizing at : {database_file_path}")
+        write_logs(f"Database file not found, initilizing at : {database_file_path}")
         create_database()
         query_into_dataframe()
     else:
-        logging.info("Database file already exist")
+        write_logs("Database file already exist")
         query_into_dataframe()
 
 
@@ -124,7 +131,7 @@ def db_connection():
     """
     try:
         conn = sqlite3.connect("data/goes18.db")
-        logging.info("Connected to db")    
+        write_logs("Connected to db")    
     except Exception as e:
         print(e)
     return conn
@@ -162,7 +169,7 @@ def grab_years(station):
     year_list=years.year.tolist()
     
     conn.close()
-    logging.info("Years listed for given station")
+    write_logs("Years listed for given station")
     
     return year_list
 
@@ -184,7 +191,7 @@ def grab_days(station,years):
     day_list=[x.zfill(3) for x in day_list]
 
     conn.close()
-    logging.info("Days listed for given year")
+    write_logs("Days listed for given year")
     return day_list
 
 def grab_hours(station,years,days):
@@ -205,7 +212,7 @@ def grab_hours(station,years,days):
     hour_list=hours.hour.tolist()
     hour_list=[x.zfill(2) for x in hour_list]
     conn.close()
-    logging.info("Hours listed for given station,year,day")
+    write_logs("Hours listed for given station,year,day")
     return hour_list
 
 def grab_files(station,years,days,hours):
@@ -223,7 +230,7 @@ def grab_files(station,years,days,hours):
     
     client_id=create_connection()
     
-    logging.info("fetching Files in list from NOAA bucket")
+    write_logs("fetching Files in list from NOAA bucket")
         
     file_names = []
     bucket = 'noaa-goes18'
@@ -231,7 +238,7 @@ def grab_files(station,years,days,hours):
     for o in result.get('Contents'):
         file_names.append(o.get('Key').split('/')[4])
 
-    logging.info("files retrieved for the given year, month, day and station from the S3 bucket")
+    write_logs("files retrieved for the given year, month, day and station from the S3 bucket")
     
     return file_names
         
@@ -251,9 +258,7 @@ def create_url(station,year,day,hour,file_name):
        
     url= 'https://noaa-goes18.s3.amazonaws.com/' + station + '/'+year + '/'+ day + '/'+ hour + '/'+ file_name
     
-    logging.info("URL created for NOAA-GOES18 bucket")
-    logging.info("url")
-    
+    write_logs("URL created for NOAA-GOES18 bucket")
     return url
 
 def generate_key(station,year,day,hour,file_name):
@@ -290,11 +295,29 @@ def copy_files_s3(key,filename):
     client_id.copy_object(Bucket='damg7245-demo', CopySource={"Bucket": 'noaa-goes18', "Key": key}, Key=filename)
     
     url='https://damg7245-demo.s3.amazonaws.com/' + filename
-    logging.info("URL created for Personal bucket")
-    logging.info("url")
+    write_logs("URL created for Personal bucket")
     
     return url
 
+
+def write_logs(message):
+    
+    """Writes the logs to the cloudwatch logs
+
+    Args:
+        message (str): The message to be written to the logs
+    """
+    
+    clientlogs.put_log_events (
+    logGroupName="assignment_01",
+    logStreamName="app_logs",
+    logEvents=[
+        {
+    'timestamp' : int(time.time()* 1e3),
+    'message': message,
+    }
+    ]
+    )
 
 # for creating dataframe and data base follow below code
 
@@ -306,7 +329,7 @@ def copy_files_s3(key,filename):
 
 
 # if __name__ == "__main__":
-#     logging.info("Script starts")
+#     write_logs("Script starts")
 #     main()
-#     logging.info("Script ends")
+#     write_logs("Script ends")
         
