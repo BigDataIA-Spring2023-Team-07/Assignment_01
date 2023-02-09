@@ -90,6 +90,7 @@ yearSelected = st.selectbox(
 
 insertData_to_db()
 data = retrieveData_from_db(yearSelected)
+nexrad_main.appendCsv()
 
 
 # User selects the month

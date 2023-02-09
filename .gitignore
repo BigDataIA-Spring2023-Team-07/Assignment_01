@@ -10,7 +10,7 @@ pages/venv_streamlit
 backend/venv_goes18
 
 venv_assignment1
-backend/test.py
+backend/test.pys
 __pycache__
 backend/__pycache__
 
