@@ -16,7 +16,6 @@ if st.button('Get URL'):
                     st.error('File does not exist. Please check the file name and try again!', icon="🚨")
                 else:
                     st.write('Download URL:  \n ', get_res)
-                st.warning('Entered file name is invalid!', icon="⚠️")
             else:
                 st.warning(validate_res, icon="⚠️")
         else:
