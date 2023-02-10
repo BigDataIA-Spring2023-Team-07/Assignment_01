@@ -1,9 +1,9 @@
 import pytest
+import sys
+sys.path.append('../Assignment_01')
 from backend import nexrad_main
 from backend import goes_file_retrieval_main
 from backend import nexrad_file_retrieval_main
-import sys
-sys.path.append('../Assignment_01')
 from backend import main_goes18
 
 def test_link_nexrad_streamlit():
@@ -35,7 +35,8 @@ def test_goes18_link_generation():
     assert 'https://noaa-goes18.s3.amazonaws.com/ABI-L1b-RadM/2023/003/02/OR_ABI-L1b-RadM1-M6C01_G18_s20230030201252_e20230030201311_c20230030201340.nc'==main_goes18.create_url('ABI-L1b-RadM','2023','003','02','OR_ABI-L1b-RadM1-M6C01_G18_s20230030201252_e20230030201311_c20230030201340.nc')
     assert 'https://noaa-goes18.s3.amazonaws.com/ABI-L2-ACHTF/2022/353/22/OR_ABI-L2-ACHTF-M6_G18_s20223532240210_e20223532249518_c20223532252164.nc'==main_goes18.create_url('ABI-L2-ACHTF','2022','353','22','OR_ABI-L2-ACHTF-M6_G18_s20223532240210_e20223532249518_c20223532252164.nc')
 
-def goes_file_retrival_main():
+
+def test_goes_file_retrival_main():
     
     assert "https://noaa-goes18.s3.amazonaws.com/ABI-L1b-RadC/2023/002/01/OR_ABI-L1b-RadC-M6C01_G18_s20230020101172_e20230020103548_c20230020103594.nc"   == goes_file_retrieval_main.get_file_url("OR_ABI-L1b-RadC-M6C01_G18_s20230020101172_e20230020103548_c20230020103594.nc")
     assert "https://noaa-goes18.s3.amazonaws.com/ABI-L2-ACMM/2023/009/05/OR_ABI-L2-ACMM1-M6_G18_s20230090504262_e20230090504319_c20230090505026.nc"       == goes_file_retrieval_main.get_file_url("OR_ABI-L2-ACMM1-M6_G18_s20230090504262_e20230090504319_c20230090505026.nc")
@@ -50,7 +51,7 @@ def goes_file_retrival_main():
     assert "https://noaa-goes18.s3.amazonaws.com/ABI-L2-DMWVM/2022/355/20/OR_ABI-L2-DMWVM1-M6C08_G18_s20223552050271_e20223552050328_c20223552122197.nc"  == goes_file_retrieval_main.get_file_url("OR_ABI-L2-DMWVM1-M6C08_G18_s20223552050271_e20223552050328_c20223552122197.nc")
     assert "https://noaa-goes18.s3.amazonaws.com/ABI-L2-ACMC/2022/280/09/OR_ABI-L2-ACMC-M6_G18_s20222800931164_e20222800933537_c20222800934574.nc"        == goes_file_retrieval_main.get_file_url("OR_ABI-L2-ACMC-M6_G18_s20222800931164_e20222800933537_c20222800934574.nc")
 
-def nexrad_file_retrival_main():
+def test_nexrad_file_retrival_main():
     
     assert "https://noaa-nexrad-level2.s3.amazonaws.com/2011/06/12/KBGM/KBGM20110612_003045_V03.gz" == nexrad_file_retrieval_main.get_nexrad_file_url("KBGM20110612_003045_V03.gz")
     assert "https://noaa-nexrad-level2.s3.amazonaws.com/2010/05/12/KARX/KARX20100512_014240_V03.gz" == nexrad_file_retrieval_main.get_nexrad_file_url("KARX20100512_014240_V03.gz")
