@@ -13,10 +13,16 @@ venv_assignment1
 backend/test.pys
 __pycache__
 backend/__pycache__
+backend/__pycache__/nexrad_main.cpython-310.pyc
+pages/__pycache__/Nexrad.cpython-310.pyc
 
 
-data/great_expectations/checkpoints
-data/great_expectations/plugins
-data/great_expectations/expectations/.ge_store_backend_id
-data/great_expectations/uncommitted/config_variables.yml
-data/great_expectations/uncommitted/validations
+
+great_expectations/checkpoints
+great_expectations/data
+great_expectations/plugins
+great_expectations/expectations/.ge_store_backend_id
+great_expectations/uncommitted/validations
+great_expectations/uncommitted/config_variables.yml
+
+
