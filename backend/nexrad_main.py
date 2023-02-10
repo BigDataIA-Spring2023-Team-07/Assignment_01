@@ -280,6 +280,8 @@ def write_logs(message):
 
 # def plotNextRad(file_name):
 
+##
+
 #     """
 #     This function plots the NEXRAD locations on a map based on the csv file
 #     Args:
