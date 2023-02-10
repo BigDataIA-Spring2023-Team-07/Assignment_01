@@ -137,6 +137,9 @@ def validate_file(filename):
     return "End time specified is in incorrect format"
 
   file_name_split[5]=file_name_split[5].replace(" ","")
+  if file_name_split[5][15:18]!='.nc':
+    return "File name should end with .nc only"
+  
   if len(file_name_split[5])==18 and file_name_split[5][0]=='c' and file_name_split[5][1:15].isnumeric() and file_name_split[5][15:18]=='.nc':
     if int(file_name_split[5][1:5])>2023 or int(file_name_split[5][5:8])>366 or int(file_name_split[5][8:10])>24 or int(file_name_split[5][10:12])>60 or int(file_name_split[5][12:14])>60:
       write_logs("File creation time specified is in incorrect format")
@@ -185,8 +188,8 @@ def get_file_url(filename):
 
     # Check if the response was successful
     if response.status_code == 200:
-        write_logs("File url generated")
-        write_logs("Get file url function complete")    
+        write_logs("File url: "+ final_url +" downloaded")
+        write_logs("Get file url function complete")
         return final_url
     else:
         write_logs("File name not found")
