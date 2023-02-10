@@ -259,6 +259,7 @@ def create_url(station,year,day,hour,file_name):
     url= 'https://noaa-goes18.s3.amazonaws.com/' + station + '/'+year + '/'+ day + '/'+ hour + '/'+ file_name
     
     write_logs("URL created for NOAA-GOES18 bucket")
+    write_logs(url)
     return url
 
 def generate_key(station,year,day,hour,file_name):
@@ -296,6 +297,7 @@ def copy_files_s3(key,filename):
     
     url='https://damg7245-demo.s3.amazonaws.com/' + filename
     write_logs("URL created for Personal bucket")
+    write_logs(url)
     
     return url
 
