@@ -191,6 +191,7 @@ def generateUserLink(bucket_name, key):
 
     url = "https://" + bucket_name + ".s3.amazonaws.com" + "/" + key
     write_logs("link generated for the Nexxrad bucket")
+    write_logs(url)
     return url
 
 
