@@ -136,6 +136,7 @@ def validate_file(filename):
     write_logs("File validation function execution complete")
     return "End time specified is in incorrect format"
 
+  file_name_split[5]=file_name_split[5].replace(" ","")
   if len(file_name_split[5])==18 and file_name_split[5][0]=='c' and file_name_split[5][1:15].isnumeric() and file_name_split[5][15:18]=='.nc':
     if int(file_name_split[5][1:5])>2023 or int(file_name_split[5][5:8])>366 or int(file_name_split[5][8:10])>24 or int(file_name_split[5][10:12])>60 or int(file_name_split[5][12:14])>60:
       write_logs("File creation time specified is in incorrect format")
