@@ -1,5 +1,4 @@
-,"State
-(Abbreviation)",City or Place Name,ICAO Location Identifier,Coordinates,Lat,Lon
+Id,State,City,ICAO_Location_Identifier,Coordinates,Lat,Lon
 0,PR,San Juan,TJUA,18.1155998°N 66.0780644°W,18.1155998,66.0780644
 1,ME,Houlton,KCBW,46.0391944°N 67.8066033°W,46.0391944,67.8066033
 2,ME,Gray/Portland,KGYX,43.8913555°N 70.2565545°W,43.8913555,70.2565545
