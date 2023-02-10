@@ -26,6 +26,8 @@ def create_plot_table():
 
 if __name__ == "__main__":
     create_plot_table()
-    st.title("Assignment 1 Team 07")
+    st.title("Are you looking for SEVIR data?")
+    st.text("Team07-Assignment1")
+    st.text("Let us fetch that for you!")
     image = Image.open('image.png')
-    st.image(image, caption='four humans working on satelite data from the moon')
+    st.image(image, caption='four humans working to fetch satelite data')
